@@ -1,0 +1,80 @@
+body {
+    margin: 0px;
+    background-color: grey;
+    display: grid;
+    grid-template-areas: "menu" "interfejs";
+    grid-template-columns: 25% 75%;
+    grid-template-rows: 100vh;
+  }
+  
+  #menu {
+    background-color: grey;
+    border: 3px solid black;
+    font-size: 200%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+  
+  #country-data {
+    background-color: lightgrey;
+    border: 3px solid black;
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .country {
+    width: 300px;
+    height: 100px;
+    border: 2px solid black;
+    display: flex;
+  }
+  
+  .country {
+    margin: 10px;
+    padding: 10px;
+  }
+  
+  .flag {
+    margin-right: 10px;
+  }
+  
+  .info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .info p {
+    margin: 5px 0;
+  }
+
+#africa-checkbox{
+ height: 25px;
+ width: 25px;
+}
+
+#asia-checkbox{
+    height: 25px;
+    width: 25px;
+}
+
+#europe-checkbox{
+    height: 25px;
+    width: 25px;
+}
+
+#america-checkbox{
+    height: 25px;
+    width: 25px;
+}
+
+#oceania-checkbox{
+    height: 25px;
+    width: 25px;
+    background-color: lightgrey;
+}
