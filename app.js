@@ -1,81 +1,86 @@
-        // Pobierz dane z API
-        const apiUrl = 'https://restcountries.com/v3.1/all';
+       // Pobierz dane z API
+       const apiUrl = 'https://restcountries.com/v3.1/all';
 
-        // Funkcja do pobierania danych z API
-        function fetchCountries() {
-            fetch(apiUrl)
-                .then((response) => response.json())
-                .then((data) => {
-                    const countries = data.map((country) => ({
-                        name: country.name.common,
-                        flag: country.flags.png,
-                        population: country.population,
-                        capital: country.capital ? country.capital[0] : "Brak danych",
-                        region: country.region,
-                    }));
+       // Funkcja do pobierania danych z API
+       function fetchCountries() {
+           fetch(apiUrl)
+               .then((response) => response.json())
+               .then((data) => {
+                   const countries = data.map((country) => ({
+                       name: country.name.common,
+                       flag: country.flags.png,
+                       population: country.population,
+                       capital: country.capital ? country.capital[0] : "Brak danych",
+                       region: country.region,
+                   }));
 
-                    // Wywołaj funkcję do wyświetlania danych kraju
-                    function displayCountryData() {
-                        const selectedContinents = Array.from(document.querySelectorAll('.continent-checkbox:checked')).map(checkbox => checkbox.value);
-                        const filteredCountries = countries.filter(country => {
-                            if (selectedContinents.length === 0) {
-                                return true; // Wyświetl wszystkie kraje, gdy nie ma zaznaczonych checkboxów
-                            } else {
-                                return selectedContinents.includes(country.region);
-                            }
-                        });
+                   // Wywołaj funkcję do wyświetlania danych kraju
+                   function displayCountryData() {
+                       const selectedContinents = Array.from(document.querySelectorAll('.continent-checkbox:checked')).map(checkbox => checkbox.value);
+                       const searchText = document.getElementById('country-search').value.toLowerCase();
 
-                        const countryDataDiv = document.getElementById('country-data');
-                        countryDataDiv.innerHTML = ''; // Wyczyść zawartość div
+                       const filteredCountries = countries.filter(country => {
+                           const matchRegion = selectedContinents.length === 0 || selectedContinents.includes(country.region);
+                           const matchSearch = country.name.toLowerCase().includes(searchText);
+                           return matchRegion && matchSearch;
+                       });
 
-                        filteredCountries.forEach((country) => {
-                            const countryDiv = document.createElement("div");
-                            countryDiv.classList.add("country");
+                       const countryDataDiv = document.getElementById('country-data');
+                       countryDataDiv.innerHTML = ''; // Wyczyść zawartość div
 
-                            const flagImage = document.createElement("img");
-                            flagImage.src = country.flag;
-                            flagImage.alt = country.name;
-                            flagImage.width = 100;
-                            flagImage.height = 100;
-                            flagImage.classList.add("flag");
+                       filteredCountries.forEach((country) => {
+                           const countryDiv = document.createElement("div");
+                           countryDiv.classList.add("country");
 
-                            const countryInfo = document.createElement("div");
-                            countryInfo.classList.add("info");
+                           const flagImage = document.createElement("img");
+                           flagImage.src = country.flag;
+                           flagImage.alt = country.name;
+                           flagImage.width = 100;
+                           flagImage.height = 100;
+                           flagImage.classList.add("flag");
 
-                            const countryName = document.createElement("p");
-                            countryName.textContent = `Kraj: ${country.name}`;
+                           const countryInfo = document.createElement("div");
+                           countryInfo.classList.add("info");
 
-                            const countryPopulation = document.createElement("p");
-                            countryPopulation.textContent = `Populacja: ${country.population}`;
+                           const countryName = document.createElement("p");
+                           countryName.textContent = `Kraj: ${country.name}`;
 
-                            const countryCapital = document.createElement("p");
-                            countryCapital.textContent = `Stolica: ${country.capital}`;
+                           const countryPopulation = document.createElement("p");
+                           countryPopulation.textContent = `Populacja: ${country.population}`;
 
-                            countryInfo.appendChild(countryName);
-                            countryInfo.appendChild(countryPopulation);
-                            countryInfo.appendChild(countryCapital);
+                           const countryCapital = document.createElement("p");
+                           countryCapital.textContent = `Stolica: ${country.capital}`;
 
-                            countryDiv.appendChild(flagImage);
-                            countryDiv.appendChild(countryInfo);
-                            countryDataDiv.appendChild(countryDiv);
-                        });
-                    }
+                           countryInfo.appendChild(countryName);
+                           countryInfo.appendChild(countryPopulation);
+                           countryInfo.appendChild(countryCapital);
 
-                    // Nasłuchuj zmiany w checkboxach
-                    const checkboxes = document.querySelectorAll('.continent-checkbox');
-                    checkboxes.forEach(checkbox => {
-                        checkbox.addEventListener('change', () => {
-                            displayCountryData();
-                        });
-                    });
+                           countryDiv.appendChild(flagImage);
+                           countryDiv.appendChild(countryInfo);
+                           countryDataDiv.appendChild(countryDiv);
+                       });
+                   }
 
-                    // Wywołaj funkcję do wyświetlania danych kraju po załadowaniu strony
-                    displayCountryData();
-                })
-                .catch((error) => {
-                    console.error("Błąd pobierania danych z API:", error);
-                });
-        }
+                   // Nasłuchuj zmiany w checkboxach i polu wyszukiwania
+                   const checkboxes = document.querySelectorAll('.continent-checkbox');
+                   checkboxes.forEach(checkbox => {
+                       checkbox.addEventListener('change', () => {
+                           displayCountryData();
+                       });
+                   });
 
-        // Wywołaj funkcję pobierającą dane z API po załadowaniu strony
-        document.addEventListener("DOMContentLoaded", fetchCountries);
+                   const searchInput = document.getElementById('country-search');
+                   searchInput.addEventListener('input', () => {
+                       displayCountryData();
+                   });
+
+                   // Wywołaj funkcję do wyświetlania danych kraju po załadowaniu strony
+                   displayCountryData();
+               })
+               .catch((error) => {
+                   console.error("Błąd pobierania danych z API:", error);
+               });
+       }
+
+       // Wywołaj funkcję pobierającą dane z API po załadowaniu strony
+       document.addEventListener("DOMContentLoaded", fetchCountries);
